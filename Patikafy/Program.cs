@@ -1,6 +1,7 @@
 ﻿//Yukarıda 11 sanatçımız için bir veri tablosu verilmiştir. Tablodaki her bir satır bir nesneye karşılık gelecek şekilde
 // bu nesnelerden oluşan bir liste tanımlayınız. Ardından bu liste üzerinden aşığıdaki sorguları gerçekleştiriniz.
 
+using System.Text.RegularExpressions;
 using Patikafy;
 
 public class Program
@@ -69,14 +70,23 @@ public class Program
         }
 
 //2000 yılı öncesi çıkış yapmış ve pop müzik yapan şarkıcılar. ( Çıkış yıllarına göre gruplayarak, alfabetik bir sıra ile yazdırınız.
-
-        var popSingers = singers.Where(singer => singer.Year < 2000 && singer.Genre.Contains("Pop")).GroupBy(singer => singer.Year).OrderBy(singer => singer.Name);
-
-        Console.WriteLine("2000 öncesi çıkış yapmış Pop Şarkıcıları:");
-
-        foreach (var singer in popSingers)
+        var groupedPopSingers = singers
+            .Where(singer => singer.Year < 2000 && singer.Genre.Contains("Pop")) // 2000 öncesi ve "Pop" türünü içerenler
+            .GroupBy(singer => singer.Year) // Çıkış yıllarına göre grupla
+            .OrderBy(group => group.Key) // Yıllara göre sırala
+            .Select(group => new
+            {
+                Year = group.Key,
+                Singers = group.OrderBy(singer => singer.Name).ToList() // Her grubun içindeki şarkıcıları alfabetik sırala
+            });
+        
+        foreach (var group in groupedPopSingers)
         {
-            Console.WriteLine(singer.Name);
+            Console.WriteLine($"Yıl: {group.Year}");
+            foreach (var singer in group.Singers)
+            {
+                Console.WriteLine($" - {singer.Name}");
+            }
         }
 
 //En çok albüm satan şarkıcı

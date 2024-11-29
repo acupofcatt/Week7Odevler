@@ -12,12 +12,14 @@ public class Program
         List<TvShows> shows = new List<TvShows>();
         do
         {
-            //kullanıcıdan yeni bir film bilgisi alıyorum
-            Console.WriteLine("Lütfen bir dizi ekleyiniz:");
-            
-            //film nesnesi oluşturan GetMovie metodunu çağırıorum
+            //kullanıcıdan yeni bir dizi bilgisi alıyorum
+            Console.WriteLine("Dizi ekleyiniz:");
+
+            //dizi nesnesi oluşturan GetShows metodunu çağırıorum
             shows.Add(GetShows());
-        
+            
+// Yani kullanıcıya her diziyi oluşturup listeye ekledikten sonra yeni bir dizi ekleyip eklemediğini sormamız gerekiyor.
+
             //kullanıcı devam etmek istiyor mu?
             Console.WriteLine("Yeni bir dizi eklemek için 'Evet' sonlandırmak için 'Hayır' giriniz.");
             string input = Console.ReadLine().ToLower();
@@ -32,9 +34,30 @@ public class Program
                 devam = false;
             }
         } while (devam == true);
+
+// İlk listenizde bulunan komedi dizilerinden yeni bir liste oluşturunuz. Bu listede yalnızca Dizi Adı / Dizi Türü / Yönetmen
+// bilgileri yer alsın (Yani başka bir class ihtiyacınız doğuyor.)
+
+        var comedyShows = shows.Where(show => show.Genre == "Komedi")
+            .Select(show => new InputList
+            { TvShowName = show.TvShowName, Genre = "Komedi", Director = show.Director })
+            .OrderBy(show => show.TvShowName)
+            .ThenBy(show => show.Director)
+            .ToList();
+        
+//  Bu yeni listenin bütün elemanlarını bütün özellikleriyle ekrana yazdırınız. Yazımın öncelikle dizi isimleri sonra da
+// yönetmen isimleri baz alınarak sıralanmasına özen gösteriniz.
+        
+        Console.WriteLine("Komedi Dizileri:");
+        
+        foreach (var comedy in comedyShows)
+        {
+            Console.WriteLine($"Dizi Adı: {comedy.TvShowName}, Tür: {comedy.Genre}, Yönetmen: {comedy.Director}");
+        }
+
     }
 
-    public TvShows GetShows()
+    public static TvShows GetShows()
     {
         //yeni bir nesne oluşturuyorum
         TvShows tvShows = new TvShows();
@@ -46,7 +69,7 @@ public class Program
         string name = char.ToUpper(nameIlk[0]).ToString();
 
         //kullanıcıdan aldığım ismi dizinin ismine atadım
-        TvShows.TvShowName = name;
+        tvShows.TvShowName = name;
 
         Console.WriteLine("Lütfen dizinin yapım yılını giriniz:");
         string yearStr = Console.ReadLine();
@@ -55,64 +78,58 @@ public class Program
         if (int.TryParse(yearStr, out int year))
         {
             //kullanıcıdan aldığım sayıyı filmin puanına atadım
-            TvShows.TvShowYear = year;
+            tvShows.TvShowYear = year;
         }
         else
         {
             //hata verdi
             Console.WriteLine("Hata: Geçersiz bir sayı girdiniz! 0 kabul edildi.");
-            TvShows.TvShowYear = 0;
+            tvShows.TvShowYear = 0;
         }
-        
+
         Console.WriteLine("Lütfen dizinin türünü giriniz:");
 
 
         string genreIlk = Console.ReadLine().ToLower();
         string genre = char.ToUpper(genreIlk[0]).ToString();
 
-        TvShows.Genre = genre;
-        
+        tvShows.Genre = genre;
+
         Console.WriteLine("Lütfen dizinin yapım yılını giriniz:");
-        string releasedStr = Console.ReadLine();
+        string? releasedStr = Console.ReadLine();
 
         // Int'e dönüştürmeye çalış
         if (int.TryParse(releasedStr, out int released))
         {
             //kullanıcıdan aldığım sayıyı filmin puanına atadım
-            TvShows.Released = released;
+            tvShows.Released = released;
         }
         else
         {
             //hata verdi
             Console.WriteLine("Hata: Geçersiz bir sayı girdiniz! 0 kabul edildi.");
-            TvShows.Released = 0;
+            tvShows.Released = 0;
         }
-        
+
         Console.WriteLine("Lütfen dizinin yönetmenini giriniz:");
 
 
         string directorIlk = Console.ReadLine().ToLower();
         string director = char.ToUpper(directorIlk[0]).ToString();
 
-        TvShows.Director = director;
-        
+        tvShows.Director = director;
+
         Console.WriteLine("Lütfen dizinin yayınlandığı kanal adını giriniz:");
 
 
         string channelIlk = Console.ReadLine().ToLower();
         string channel = char.ToUpper(channelIlk[0]).ToString();
 
-        TvShows.Channel = channel;
+        tvShows.Channel = channel;
 
 
         return tvShows;
     }
 }
-// 
-// Yani kullanıcıya her diziyi oluşturup listeye ekledikten sonra yeni bir dizi ekleyip eklemediğini sormamız gerekiyor.
 
-//Ardından aşağıda istenilen işlemleri gerçekleştiriniz.
-// 
-// İlk listenizde bulunan komedi dizilerinden yeni bir liste oluşturunuz. Bu listede yalnızca Dizi Adı / Dizi Türü / Yönetmen bilgileri yer alsın (Yani başka bir class ihtiyacınız doğuyor.)
-// 
-//  Bu yeni listenin bütün elemanlarını bütün özellikleriyle ekrana yazdırınız. Yazımın öncelikle dizi isimleri sonra da yönetmen isimleri baz alınarak sıralanmasına özen gösteriniz.
+

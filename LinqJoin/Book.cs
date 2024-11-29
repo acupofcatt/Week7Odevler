@@ -8,5 +8,9 @@ namespace LinqJoin;
 // AuthorId (int) - Kitabın yazarının kimliği (Yazarlar tablosundaki AuthorId ile ilişkilidir)
 public class Book
 {
+    public int BookId { get; set; }
     
+    public string Title { get; set; }
+    
+    public int AuthorId { get; set; }
 }
